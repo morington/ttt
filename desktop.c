@@ -1,11 +1,21 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 
-#define NUM_WORKSPACES 4 // Количество рабочих столов
+#define NUM_WORKSPACES 4
 
 GtkWidget *window, *desktop, *panel, *clock_label, *menu_button;
 GtkWidget *workspaces[NUM_WORKSPACES];
 int current_workspace = 0;
+
+// Объявления функций
+void switch_workspace(GtkWidget *widget, gpointer data);
+void on_menu_clicked(GtkWidget *widget, gpointer data);
+void launch_application(GtkWidget *widget, gchar *app_name);
+gboolean update_clock(gpointer data);
+
+void hide_widget(GtkWidget *widget, gpointer data) {
+    gtk_widget_hide(widget);
+}
 
 void switch_workspace(GtkWidget *widget, gpointer data) {
     gtk_widget_hide(workspaces[current_workspace]);
@@ -44,8 +54,17 @@ void launch_application(GtkWidget *widget, gchar *app_name) {
     gtk_widget_show_all(window);
     gtk_container_add(GTK_CONTAINER(workspaces[current_workspace]), window);
     current_workspace = (current_workspace + 1) % NUM_WORKSPACES;
-    gtk_widget_hide_all(workspaces[current_workspace]);
+    gtk_container_foreach(GTK_CONTAINER(workspaces[current_workspace]), (GtkCallback)hide_widget, NULL);
     gtk_widget_show_all(workspaces[current_workspace]);
+}
+
+gboolean update_clock(gpointer data) {
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    char time_str[6];
+    snprintf(time_str, sizeof(time_str), "%02d:%02d", tm.tm_hour, tm.tm_min);
+    gtk_label_set_text(GTK_LABEL(clock_label), time_str);
+    return TRUE;
 }
 
 int main(int argc, char *argv[]) {
@@ -84,13 +103,4 @@ int main(int argc, char *argv[]) {
     gtk_main();
 
     return 0;
-}
-
-gboolean update_clock(gpointer data) {
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    char time_str[6];
-    snprintf(time_str, sizeof(time_str), "%02d:%02d", tm.tm_hour, tm.tm_min);
-    gtk_label_set_text(GTK_LABEL(clock_label), time_str);
-    return TRUE;
 }

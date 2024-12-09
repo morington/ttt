@@ -1,0 +1,1 @@
+sudo apt install libx11-xcb-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-shm0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-xinput-dev libxcb-damage0-dev libxcb-record0-dev libxcb-render0-dev libxkbcommon-x11-dev
